@@ -1,0 +1,5 @@
+chroma/
+__pycache__/
+
+# SND30 : reproduction interdite sans accord écrit du MINEPAT (lien dans sources.csv)
+InputDocs/Cameroun/06_Strategies_nationales/snd30_*.pdf

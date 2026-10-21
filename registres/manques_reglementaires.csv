@@ -1,0 +1,3 @@
+id,categorie,description,decision_concernee,textes_examines,exemple_international,statut,detecte_par,date
+GAP-001,RESPONSABILITE_FLOUE,Aucun texte identifié ne précise qui autorise le partage de données de mobilité agrégées entre un opérateur télécom et une collectivité,Utilisation des flux antenne à antenne par la Communauté Urbaine,CMR-DP-001; CMR-TEL-001,INT-003 (RGPD : base légale de l'intérêt public),hypothese_a_verifier,equipe,2026-10-21
+GAP-002,COORDINATION,Aucun mécanisme identifié pour arbitrer en temps réel entre la Communauté Urbaine et l'exploitant de bus lors d'une réaffectation de flotte,Recommandation « déplacer 2 bus vers la ligne 3 »,CMR-DEC-001; CMR-TRA-003,,hypothese_a_verifier,equipe,2026-10-21

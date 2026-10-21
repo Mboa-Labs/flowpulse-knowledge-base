@@ -1,0 +1,25 @@
+{
+  "$comment": "Métadonnées attachées à chaque passage (chunk) stocké dans ChromaDB. Les 4 premiers champs reprennent ceux du dépôt ITUAIReadiness (ingest.py) pour rester compatibles.",
+  "champs": {
+    "source_file":       {"type": "string", "exemple": "loi_protection_donnees_2024.pdf", "origine": "ITU"},
+    "source_type":       {"type": "string", "valeurs": ["national_strategy", "policy_document", "standards_document", "international_org_report", "law", "contract"], "origine": "ITU (+ law, contract)"},
+    "country":           {"type": "string", "exemple": "Cameroun", "origine": "ITU"},
+    "document_category": {"type": "string", "exemple": "Cameroun/01_Donnees_personnelles", "origine": "ITU (sous-dossier d'InputDocs)"},
+    "doc_id":            {"type": "string", "exemple": "CMR-DP-001", "origine": "FlowPulse, colonne id de sources.csv"},
+    "titre":             {"type": "string", "origine": "sources.csv"},
+    "reference":         {"type": "string", "exemple": "Loi n° .../... du ...", "origine": "sources.csv"},
+    "type_texte":        {"type": "string", "valeurs": ["LOI", "DECRET", "ARRETE", "DECISION", "PLAN", "CONTRAT", "STRATEGIE", "NORME_ITU", "CONVENTION", "REGLEMENT"], "origine": "sources.csv"},
+    "autorite":          {"type": "string", "origine": "sources.csv"},
+    "date_adoption":     {"type": "string", "origine": "sources.csv"},
+    "domaine":           {"type": "string", "valeurs": ["donnees_personnelles", "communications_electroniques", "cybersecurite", "decentralisation", "transport_urbain", "strategie", "norme"], "origine": "sources.csv"},
+    "article":           {"type": "string", "exemple": "Article 12", "origine": "détecté au découpage (vide si le texte n'a pas d'articles)"},
+    "chunk_index":       {"type": "string", "origine": "ITU"},
+    "total_chunks":      {"type": "string", "origine": "ITU"},
+    "ingested_at":       {"type": "string", "format": "ISO 8601", "origine": "ITU"}
+  },
+  "collections_chromadb": {
+    "kb_reglementaire": "Textes camerounais et internationaux (InputDocs/Cameroun, InputDocs/International)",
+    "kb_framework":     "Normes et cadre ITU (InputDocs/ITU) et définitions des 13 dimensions",
+    "kb_manques":       "Manques réglementaires détectés (registres/manques_reglementaires.csv)"
+  }
+}
