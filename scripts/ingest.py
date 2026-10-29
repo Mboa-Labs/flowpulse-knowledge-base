@@ -197,6 +197,9 @@ def main() -> None:
         chunks = chunk_document(parse_file(path))
         articles = sorted({a for a, _ in chunks if a}, key=lambda a: (len(a), a))
         print(f"{row['id']} : {len(chunks)} passages, {len(articles)} articles détectés ({path.name})")
+        if not chunks:
+            print("   aucun texte extrait (PDF scanné ?) : à passer en reconnaissance de caractères")
+            continue
         if args.dry_run:
             for article, chunk in chunks[:3]:
                 print(f"   [{article or '—'}] {chunk[:120]}…")
