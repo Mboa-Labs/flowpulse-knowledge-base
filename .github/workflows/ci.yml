@@ -1,0 +1,19 @@
+# Intégration continue : inventaire et script d'indexation valides avant tout déploiement.
+name: Vérifications
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  verifications:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Syntaxe des scripts
+        run: python -m py_compile scripts/ingest.py scripts/verifier_sources.py
+      - name: Inventaire lisible
+        run: python -c "import csv; rows = list(csv.DictReader(open('sources.csv', encoding='utf-8'))); assert rows and {'id', 'statut', 'fichier'} <= set(rows[0]); print(len(rows), 'documents')"
