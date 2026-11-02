@@ -31,7 +31,7 @@ flowpulse-knowledge-base/
 1. **Trouver la version officielle** : Journal officiel, site du ministère, de l'ART, de la Communauté Urbaine, de l'ITU. Pas de résumé de blog.
 2. **Déposer le fichier** dans le bon sous-dossier, avec un nom court sans espaces ni accents : `loi_2010_013_communications_electroniques.pdf`. Un `.docx` doit être converti en PDF.
 3. **Compléter sa ligne dans `sources.csv`** : `fichier`, `reference` exacte, `autorite`, `date_adoption`, `url_source`. Remplacer chaque « à vérifier ».
-4. **Changer le statut** : `a_collecter` → `collecte` (fichier déposé) → `verifie` (métadonnées contrôlées par une deuxième personne). Seuls les documents `verifie` sont ingérés.
+4. **Changer le statut** : `a_collecter` → `collecte` (fichier déposé) → `verifie` (métadonnées contrôlées par une deuxième personne). Seuls les documents `verifie` sont ingérés. Le statut `exclu` garde un document dans l'inventaire sans jamais l'indexer (doublon ou hors sujet, avec la raison dans `notes`).
 5. **Contrôler** : `python scripts/verifier_sources.py`
 6. **Ingérer** : `python scripts/ingest.py --dry-run` pour voir le découpage, puis sans `--dry-run`. Le statut passe ensuite à `indexe`.
 

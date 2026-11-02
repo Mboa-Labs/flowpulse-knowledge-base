@@ -42,6 +42,7 @@ EMBED_MODEL = os.environ.get("FLOWPULSE_EMBED_MODEL", "nomic-embed-text")
 OLLAMA_URL = os.environ.get("FLOWPULSE_OLLAMA_URL", "http://localhost:11434")
 
 INGESTABLE = {"verifie", "indexe"}
+EXCLU = "exclu"  # gardé dans l'inventaire, jamais indexé (doublon, hors sujet), même avec --all
 
 SOURCE_TYPE = {
     "LOI": "law", "DECRET": "law", "ARRETE": "law", "DECISION": "policy_document",
@@ -150,12 +151,18 @@ def build_metadata(row: dict[str, str], article: str, index: int, total: int) ->
 # Ingestion
 # ------------------------------------------------------------------
 
-def embed(texts: list[str]) -> list[list[float]]:
+def embed(texts: list[str], progression: bool = False) -> list[list[float]]:
     import ollama
     client = ollama.Client(host=OLLAMA_URL)
     vectors = []
     for i in range(0, len(texts), 32):
         vectors.extend(client.embed(model=EMBED_MODEL, input=texts[i:i + 32])["embeddings"])
+        if progression:  # barre sur la même ligne : on voit le document avancer
+            fait = len(vectors)
+            plein = round(fait / len(texts) * 24)
+            print(f"\r   [{'█' * plein}{'░' * (24 - plein)}] {fait}/{len(texts)} passages", end="", flush=True)
+    if progression:
+        print()
     return vectors
 
 
@@ -172,7 +179,7 @@ def main() -> None:
     parser.add_argument("--all", action="store_true", help="ingère aussi les documents non vérifiés (tests uniquement)")
     args = parser.parse_args()
 
-    rows = [r for r in load_rows() if r["fichier"] and (args.all or r["statut"] in INGESTABLE)]
+    rows = [r for r in load_rows() if r["fichier"] and r["statut"] != EXCLU and (args.all or r["statut"] in INGESTABLE)]
     if not rows:
         print("Aucun document à ingérer : renseignez « fichier » et passez le statut à « verifie » dans sources.csv.")
         return
@@ -209,7 +216,7 @@ def main() -> None:
         col.upsert(
             ids=[f"{row['id']}-{i}" for i in range(len(chunks))],
             documents=texts,
-            embeddings=embed(texts),
+            embeddings=embed(texts, progression=True),
             metadatas=[build_metadata(row, a, i, len(chunks)) for i, (a, _) in enumerate(chunks)],
         )
         total += len(chunks)
