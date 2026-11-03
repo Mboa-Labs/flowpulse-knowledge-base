@@ -40,6 +40,8 @@ CHUNK_OVERLAP = 30    # mots, comme le dépôt ITU
 MAX_CHARS = 2000      # limite de sûreté pour nomic-embed-text, comme le dépôt ITU
 EMBED_MODEL = os.environ.get("FLOWPULSE_EMBED_MODEL", "nomic-embed-text")
 OLLAMA_URL = os.environ.get("FLOWPULSE_OLLAMA_URL", "http://localhost:11434")
+# Fils de calcul, à régler sur la limite de processeurs du conteneur Ollama (voir le service IA)
+LLM_THREADS = int(os.environ["FLOWPULSE_LLM_THREADS"]) if os.environ.get("FLOWPULSE_LLM_THREADS") else None
 
 INGESTABLE = {"verifie", "indexe"}
 EXCLU = "exclu"  # gardé dans l'inventaire, jamais indexé (doublon, hors sujet), même avec --all
@@ -156,7 +158,8 @@ def embed(texts: list[str], progression: bool = False) -> list[list[float]]:
     client = ollama.Client(host=OLLAMA_URL)
     vectors = []
     for i in range(0, len(texts), 32):
-        vectors.extend(client.embed(model=EMBED_MODEL, input=texts[i:i + 32])["embeddings"])
+        vectors.extend(client.embed(model=EMBED_MODEL, input=texts[i:i + 32],
+                                    options={"num_thread": LLM_THREADS} if LLM_THREADS else None)["embeddings"])
         if progression:  # barre sur la même ligne : on voit le document avancer
             fait = len(vectors)
             plein = round(fait / len(texts) * 24)
