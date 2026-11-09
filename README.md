@@ -57,7 +57,21 @@ Collections :
 
 ## Registre des manques
 
-Chaque ligne de `registres/manques_reglementaires.csv` porte une catégorie du jury : `RESPONSABILITE_FLOUE`, `NORME_ABSENTE`, `VIDE_JURIDIQUE`, `COORDINATION`, `OBJECTIFS_CONTRADICTOIRES`. L'équipe y note les manques repérés en lisant les textes ; l'agent Politique y ajoute ceux qu'il détecte en fonctionnement. Les deux lignes actuelles sont des hypothèses à confirmer après lecture des textes.
+Chaque ligne de `registres/manques_reglementaires.csv` porte une catégorie du jury : `RESPONSABILITE_FLOUE`, `NORME_ABSENTE`, `VIDE_JURIDIQUE`, `COORDINATION`, `OBJECTIFS_CONTRADICTOIRES`. L'équipe y note les manques repérés en lisant les textes ; l'agent Politique y ajoute ceux qu'il détecte en fonctionnement (verdict « aucun texte applicable »), visibles dans l'écran « Manques réglementaires ».
+
+Le registre compte 7 manques identifiés par lecture des textes. Chacun indique les textes examinés (avec article ou page) et un exemple de politique d'un autre pays ou d'une organisation régionale :
+
+| Id | Catégorie | Manque |
+| --- | --- | --- |
+| GAP-001 | Responsabilité floue | Qui autorise un opérateur télécom à fournir des données de mobilité agrégées à une collectivité |
+| GAP-002 | Norme absente | Aucune norme nationale d'anonymisation des données de téléphonie mobile |
+| GAP-003 | Responsabilité floue | Suivi de la performance de la mobilité urbaine non attribué ; observatoire sans mandat de collecte |
+| GAP-004 | Coordination | Aucun mécanisme réunissant Communauté Urbaine, exploitant de bus et police pour un renfort en temps réel |
+| GAP-005 | Norme absente | Aucun format ouvert imposé pour les données de l'offre de transport (lignes, arrêts, horaires) |
+| GAP-006 | Vide juridique | Aucun cadre pour l'aide à la décision par l'IA dans un service public (contrôle humain, traçabilité) |
+| GAP-007 | Objectifs contradictoires | Stratégies favorables aux données face à une mise en conformité sans doctrine sur les données agrégées |
+
+Ces manques sont une lecture d'ingénieurs, pas un avis juridique : ils sont à confirmer par un juriste (statut `identifie_par_lecture`).
 
 ## Installation
 
@@ -66,6 +80,24 @@ pip install chromadb ollama pymupdf
 ollama pull nomic-embed-text
 ```
 
-## Attention
+## État de la base (9 novembre 2026)
 
-Les références de `sources.csv` (intitulés, numéros, dates) ont été pré-remplies de mémoire. Elles sont toutes marquées « à vérifier » ou « à identifier » et doivent être confirmées sur le texte officiel avant de passer au statut `verifie`.
+| | Nombre |
+| --- | --- |
+| Textes inventoriés dans `sources.csv` | 21 (13 collectés, 7 à collecter, 1 exclu) |
+| Textes indexés | 10 |
+| Passages de textes nationaux et internationaux (`kb_reglementaire`) | 601 |
+| Passages du cadre ITU (`kb_framework` : Y.3172, AI Readiness Framework 2.0) | 135 |
+| Manques documentés (`kb_manques`) | 7 |
+
+Chaque référence de `sources.csv` renvoie à sa source (site officiel quand il existe, sinon copie identifiée comme non officielle dans `notes`).
+
+**Limites connues.**
+
+- La loi n° 2024/017 sur les données personnelles et le Code général des CTD (loi n° 2019/024) sont des PDF scannés : sans reconnaissance de caractères (OCR), leur texte n'est pas encore exploitable par l'agent. Ce sont les deux priorités de la prochaine ingestion.
+- Les textes non publiés en ligne (contrat d'exploitation des bus, Plan de Déplacements Urbains de Yaoundé, texte intégral de la Stratégie nationale de l'IA) restent dans l'inventaire au statut `a_collecter` : leur absence est elle-même relevée dans le registre des manques.
+- Le recueil ART 2023 est exclu de l'indexation (464 pages de textes d'application des télécoms, sans rapport avec la mobilité) : il aurait représenté 77 % des passages et masqué les autres textes.
+
+## Droits sur les documents
+
+Les lois et décrets sont des textes officiels publics. Les autres documents restent la propriété de leurs auteurs (ITU, Union africaine, MobiliseYourCity pour la PNMU, MINICT Rwanda) : ils sont repris ici à des fins de recherche et de démonstration, avec leur source dans `sources.csv`. La SND30, dont la reproduction exige l'accord écrit du MINEPAT, n'est pas versionnée (`.gitignore`) : `sources.csv` donne son lien de téléchargement.
